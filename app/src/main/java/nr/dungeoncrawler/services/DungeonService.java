@@ -7,16 +7,20 @@ import nr.dungeoncrawler.interfaces.Node;
 import nr.dungeoncrawler.utils.Dice;
 
 public class DungeonService {
+
+    private int currentPlayerLevel; // can services hold variables?? 
+    
     public DungeonService() {
+        this.currentPlayerLevel = 0;
     }
 
-    public Node[][] generateLevel(int width, int height) {
-        Node[][] level = new Node[width][height];
-        for(int x = 0; x < width; x++) {
-            for(int y = 0; y < height; y++) {
+    public Node[][] generateLevel(int rows, int columns) {
+        Node[][] level = new Node[rows][columns];
+        for(int x = 0; x < rows; x++) {
+            for(int y = 0; y < columns; y++) {
                 if(x == 0) {
                     level[x][y] = new EventTile();
-                } else if(x == width - 1) {
+                } else if(x == rows - 1) {
                     level[x][y] = new RestTile();
                 } else {
                     level[x][y] = createTile();
@@ -28,6 +32,7 @@ public class DungeonService {
 
     public void printLevel(Node[][] level) {
         for(int x = 0; x < level.length; x++) {
+            System.out.printf("%d: ",x);
             for(int y = 0; y < level[x].length; y++) {
                 System.out.print(level[x][y].getType() + " ");
             }
@@ -44,5 +49,12 @@ public class DungeonService {
         } else {
             return new RestTile();
         }
+    }
+
+    public void setCurrentPlayerLevel(int currentPlayerLevel) {
+        this.currentPlayerLevel = currentPlayerLevel;
+    }
+    public int getCurrentPlayerLevel() {
+        return currentPlayerLevel;
     }
 }

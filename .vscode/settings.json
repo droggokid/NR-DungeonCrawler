@@ -1,7 +1,4 @@
 {
-    "java.project.sourcePaths": [
-        "app/src/main/java/nr/dungeoncrawler/interfaces",
-        "app/src/main/java/nr/dungeoncrawler/entities",
-        "app/src/main/java/nr/dungeoncrawler/services"
-    ]
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.compile.nullAnalysis.mode": "disabled"
 }
