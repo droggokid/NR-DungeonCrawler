@@ -3,12 +3,49 @@
  */
 package nr.dungeoncrawler;
 
+import java.util.Scanner;
+
+import org.checkerframework.checker.units.qual.s;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        Player player = new Player("player1");
+        System.out.printf("Welcome %s\n!", player.getName());
+        System.out.printf("You found a potion!\n");
+        System.out.println("Add potion to inventory?");
+        System.out.println("yes/no?");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        if(input == "yes"){
+            Consumable healtPotion = new Potion(ConsumableNames.HEALTH_POTION);
+            player.getInventory().add(healtPotion);
+
+        }
+        Monster monster = new Monster("gragas",10,3,10);
+        System.out.println("You encounter a monster!");
+        System.out.println("GRAGAS THE DRUNKEN");
+        System.out.println("MONSTER ATTACKS YOU!");
+        monster.attack(player);
+        System.out.println("You lose "+ monster.getDamage() +"health!");
+        System.out.println("Health after attack:" + player.getHealth());
+        System.out.println("What do you want to do?");
+        System.out.println("1. Attack");
+        System.out.println("2. Open inventory");
+        System.out.println("3. Block next attack");
+        input = scanner.nextLine();
+        System.out.println(input instanceof String);
+        if(input.equals("1")){
+            player.attack(monster);
+        
+        }
+        System.out.println("Monster health after attack:" + monster.getHealth());
+
+        /*System.out.println("Health before:" + player.getHealth());
+        System.out.println(player.getName() + "uses potion!");
+        player.getInventory().useConsumable(healtPotion);
+        System.out.println("Health after:" + player.getHealth());*/
+
     }
 }
+
