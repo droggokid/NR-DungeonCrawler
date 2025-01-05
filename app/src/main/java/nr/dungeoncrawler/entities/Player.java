@@ -1,4 +1,7 @@
-package nr.dungeoncrawler;
+package nr.dungeoncrawler.entities;
+
+import nr.dungeoncrawler.interfaces.Consumable;
+import nr.dungeoncrawler.interfaces.Spell;
 
 import java.util.ArrayList;
 

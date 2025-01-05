@@ -1,4 +1,7 @@
-package nr.dungeoncrawler;
+package nr.dungeoncrawler.entities;
+
+import nr.dungeoncrawler.interfaces.Consumable;
+import nr.dungeoncrawler.enums.ConsumableNames;
 
 public class Potion implements Consumable {
     private static int POTION_HEALTH = 5;

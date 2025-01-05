@@ -1,4 +1,4 @@
-package nr.dungeoncrawler;
+package nr.dungeoncrawler.enums;
 
 public enum ConsumableNames {
 

@@ -5,7 +5,11 @@ package nr.dungeoncrawler;
 
 import java.util.Scanner;
 
-import org.checkerframework.checker.units.qual.s;
+import nr.dungeoncrawler.entities.Monster;
+import nr.dungeoncrawler.entities.Player;
+import nr.dungeoncrawler.entities.Potion;
+import nr.dungeoncrawler.enums.ConsumableNames;
+import nr.dungeoncrawler.interfaces.Consumable;
 
 public class App {
 

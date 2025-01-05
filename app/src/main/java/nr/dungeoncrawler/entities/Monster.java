@@ -1,4 +1,4 @@
-package nr.dungeoncrawler;
+package nr.dungeoncrawler.entities;
 
 public class Monster {
     private String name;

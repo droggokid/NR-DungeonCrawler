@@ -1,4 +1,6 @@
-package nr.dungeoncrawler;
+package nr.dungeoncrawler.entities;
+
+import nr.dungeoncrawler.interfaces.Spell;
 
 public class FireSpell implements Spell {
     private String name;

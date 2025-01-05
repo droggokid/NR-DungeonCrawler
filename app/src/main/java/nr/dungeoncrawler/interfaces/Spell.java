@@ -1,4 +1,4 @@
-package nr.dungeoncrawler;
+package nr.dungeoncrawler.interfaces;
 
 public interface Spell {
 
