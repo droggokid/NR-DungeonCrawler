@@ -9,7 +9,7 @@ import nr.dungeoncrawler.utils.Dice;
 public class DungeonService {
 
     private int currentPlayerLevel; // can services hold variables?? 
-    
+    Node[][] level;
     public DungeonService() {
         this.currentPlayerLevel = 0;
     }
@@ -56,5 +56,11 @@ public class DungeonService {
     }
     public int getCurrentPlayerLevel() {
         return currentPlayerLevel;
+    }
+    public Node[][] getLevel() {
+        return generateLevel(3, 2);
+    }
+    public void setLevel(Node[][] level) {
+        this.level = level;
     }
 }
