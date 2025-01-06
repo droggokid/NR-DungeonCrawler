@@ -1,2 +1,1 @@
 Refactor validations in App.
-Fix empty string issue when first typing invalid input and then a valid one
