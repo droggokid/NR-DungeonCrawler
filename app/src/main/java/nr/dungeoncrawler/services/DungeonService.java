@@ -10,8 +10,10 @@ public class DungeonService {
 
     private int currentPlayerLevel; // can services hold variables?? 
     Node[][] level;
+    Dice dice;
     public DungeonService() {
         this.currentPlayerLevel = 0;
+        dice = new Dice();
     }
 
     public Node[][] generateLevel(int rows, int columns) {
@@ -41,7 +43,7 @@ public class DungeonService {
     }
 
     private Node createTile() {
-        int roll = Dice.rollDice();
+        int roll = dice.rollDice();
         if(roll < 3) {
             return new EventTile();
         } else if(roll < 6) {
@@ -63,4 +65,5 @@ public class DungeonService {
     public void setLevel(Node[][] level) {
         this.level = level;
     }
+ 
 }

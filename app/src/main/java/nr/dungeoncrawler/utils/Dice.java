@@ -32,7 +32,7 @@ public class Dice {
     }
 
     // Returns 1, 2, 3, 4, 5 or 6
-    public static int rollDice() {
+    public int rollDice() {
         return random.nextInt(6) + 1;
     }
 }

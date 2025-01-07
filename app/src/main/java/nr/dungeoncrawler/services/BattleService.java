@@ -4,37 +4,41 @@ import java.util.Scanner;
 
 import nr.dungeoncrawler.entities.Monster;
 import nr.dungeoncrawler.entities.Player;
-import nr.dungeoncrawler.interfaces.Item;;
+import nr.dungeoncrawler.interfaces.Item;
+import nr.dungeoncrawler.utils.Dice;;
 
 public class BattleService {
     Monster enemy;
     Player player;
+    CommunicationService communicationService;
     public BattleService() {
     }
 
-    public void startBattle(){
+    public void battle(){ // should maybe be boolean? to return if player won or not
 
         System.out.println("You encounter a monster!");
-        System.out.println("GRAGAS THE DRUNKEN");
-        System.out.println("MONSTER ATTACKS YOU!");
-
-        enemy.attack(player);
+        System.out.println("Monster: " + enemy.getName());
+        System.out.println(enemy.getName().toUpperCase() + " ATTACKS YOU!");
+        communicationService.displayPlayerActingFirstText();
+        System.out.println();
+        if(isPlayerActingFirst()){
+            System.out.println("You act first!");
+            String input = communicationService.displayBattleChoicesAndReturnInput();
+            actOnBattleInput(input);
+        }
+        else{
+            System.out.println("Monster attacks first!");
+            System.out.println("Health before attack: " + player.getHealth());
+            System.out.println("You lose " + enemy.getDamage() + " health!");
+            player.setHealth(player.getHealth() - enemy.getDamage());
+            System.out.println("Health after attack: " + player.getHealth());
+            enemy.attack(player);
+        }
         // need CommunicationService to handle text flow of the game
-        System.out.println();
-        System.out.println("Health before attack: " + player.getHealth());
-        System.out.println("You lose " + enemy.getDamage() + " health!");
-        player.setHealth(player.getHealth() - enemy.getDamage());
-        System.out.println("Health after attack: " + player.getHealth());
-        System.out.println();
-        System.out.println();
-        System.out.println("What do you want to do?");
-        System.out.println("1. Attack");
-        System.out.println("2. Open inventory - NOT IMPLEMENTED");
-        System.out.println("3. Block next attack - NOT IMPLEMENTED");
 
     }
 
-    public void endBattle(){
+    private void endBattle(){
         System.out.println("You killed the monster!");
         for(Item item : enemy.getMonsterDrops()){
             System.out.println("You found a " + item.getName());
@@ -62,6 +66,34 @@ public class BattleService {
     }
     public Player getPlayer(){
         return player;
+    }
+    private boolean isPlayerActingFirst(){
+        Dice dice = new Dice();
+        return dice.rollDice() > 3;
+    }
+
+    public void setCommunicationService(CommunicationService communicationService){
+        this.communicationService = communicationService;
+    }
+    public CommunicationService getCommunicationService(){
+        return communicationService;
+    }
+    private void actOnBattleInput(String input){
+        if(input.equals("1")){
+            player.attack(enemy);
+            if(isEnemeyDead()){
+                endBattle();
+            }
+        }
+        else if(input.equals("2")){
+            // open inventory
+        }
+        else if(input.equals("3")){
+            // block next attack
+        }
+    }
+    private boolean isEnemeyDead(){
+        return enemy.getHealth() <= 0;
     }
 
 }

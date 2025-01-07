@@ -37,7 +37,7 @@ public class ValidationService {
         }
     }
 
-    public String validateChoiceInBattleInput(String input, DungeonService dungeonService) {
+    public String validateChoiceInBattleInput(String input) {
         boolean inputValid = false;
         while (!inputValid) {
             if (InputChoices.BATTLE_CHOICES.contains(input)) {
