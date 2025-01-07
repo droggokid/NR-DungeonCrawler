@@ -15,6 +15,7 @@ import nr.dungeoncrawler.enums.ConsumableNames;
 import nr.dungeoncrawler.interfaces.Consumable;
 import nr.dungeoncrawler.interfaces.Item;
 import nr.dungeoncrawler.interfaces.Node;
+import nr.dungeoncrawler.services.BattleService;
 import nr.dungeoncrawler.services.DungeonService;
 import nr.dungeoncrawler.services.ValidationService;
 
@@ -26,13 +27,10 @@ public class App {
         System.out.printf("Welcome %s!\n", player.getName());
         oneLineOfSpace();
         System.out.println("You are in a dungeon! Here is the map:");
-        twoLinesOfSpace();
-        
 
         DungeonService dungeonService = new DungeonService();
         Node[][] level = dungeonService.generateLevel(5, 7);
         dungeonService.setLevel(level);
-        System.out.println("row length:" + level[0].length);
         int currentPlayerLevel = dungeonService.getCurrentPlayerLevel();
         dungeonService.printLevel(level);
         twoLinesOfSpace();
@@ -41,6 +39,7 @@ public class App {
         System.out.println("You move a level up when clearing a room.");
         System.out.println("Code to enter a room is the number of level + the number of room.");
         System.out.println("For example, to enter the first room in the first level, you enter 01.");
+        oneLineOfSpace();
         System.out.println("YOU ARE CURRENTLY AT LEVEL " + dungeonService.getCurrentPlayerLevel());
         oneLineOfSpace();
 
@@ -54,24 +53,13 @@ public class App {
                 level[currentPlayerLevel][Integer.parseInt(input.substring(1)) - 1].getType());
         oneLineOfSpace();
         oneLineOfSpace();
-
-        System.out.println("You encounter a monster!");
-        System.out.println("GRAGAS THE DRUNKEN");
-        System.out.println("MONSTER ATTACKS YOU!");
-
+        BattleService battleService = new BattleService();
         Monster monster = new Monster("gragas", 10, 3, 10);
-        monster.attack(player);
+        monster.addDrop(new Potion(ConsumableNames.HEALTH_POTION));
+        battleService.setEnemy(monster);
+        battleService.setPlayer(player);
 
-        twoLinesOfSpace();
-        System.out.println("Health before attack: " + player.getHealth());
-        System.out.println("You lose " + monster.getDamage() + " health!");
-        player.setHealth(player.getHealth() - monster.getDamage());
-        System.out.println("Health after attack: " + player.getHealth());
-        twoLinesOfSpace();
-        System.out.println("What do you want to do?");
-        System.out.println("1. Attack");
-        System.out.println("2. Open inventory");
-        System.out.println("3. Block next attack");
+        battleService.startBattle(); // simple implementation
 
         input = scanner.nextLine();
         input = validationService.validateChoiceInBattleInput(input, dungeonService);
@@ -80,23 +68,14 @@ public class App {
             player.attack(monster);
             System.out.println("Monster health after attack:" + monster.getHealth());
             oneLineOfSpace();
+            if (monster.getHealth() <= 0) {
+                battleService.endBattle();
+            }
         }
-        if (monster.getHealth() <= 0) {
-            System.out.println("You killed the monster!");
-            System.out.println("You found a " + monster.getDrop().getName());
-            System.out.println("Add " + monster.getDrop().getName() + " to inventory?");
-            System.out.println("yes/no?");
-            input = scanner.nextLine();
-            input = validationService.validateYesNoInput(input);
-            
-            Item monsterDrop = monster.getDrop();
-            player.getInventory().add(monsterDrop);
-            System.out.println(monsterDrop.getName() + " added to inventory!");
+        while (currentPlayerLevel != dungeonService.getLevel().length - 1) {
             System.out.println("You can go the next level.");
-
             currentPlayerLevel++;
             dungeonService.setCurrentPlayerLevel(currentPlayerLevel);
-
             System.out.println("YOU ARE CURRENTLY AT LEVEL " + dungeonService.getCurrentPlayerLevel());
             twoLinesOfSpace();
             System.out.println("Which room do you choose now?");
@@ -106,8 +85,9 @@ public class App {
             System.out.printf("You chose room %s",
                     level[currentPlayerLevel][Integer.parseInt(input.substring(1)) - 1].getType());
             oneLineOfSpace();
-        
         }
+        System.out.println("You have cleared the dungeon!");
+        System.out.println("You win!");
     }
 
     public static void twoLinesOfSpace() {
@@ -117,5 +97,4 @@ public class App {
     public static void oneLineOfSpace() {
         System.out.println();
     }
-
 }

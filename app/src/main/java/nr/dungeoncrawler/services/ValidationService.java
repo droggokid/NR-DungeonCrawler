@@ -1,6 +1,5 @@
 package nr.dungeoncrawler.services;
 
-import java.util.List;
 import java.util.Scanner;
 
 import nr.dungeoncrawler.enums.InputChoices;

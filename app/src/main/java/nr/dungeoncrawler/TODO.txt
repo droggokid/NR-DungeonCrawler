@@ -1,1 +1,8 @@
-Refactor validations in App.
+Make a CommunicationSerivce that handles the flow of the game.All the text and stuff like that. 
+    Should use ValidationService. 
+    BattleService should use about CommunciationService
+
+BattleService:
+    Should handle the flow of the Battle
+    This includes handling start of the battle, end of the battle and all the choices the player can make. 
+    BattleService knows about Player and Monster
