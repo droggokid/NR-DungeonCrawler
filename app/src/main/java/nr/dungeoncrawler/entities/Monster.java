@@ -1,5 +1,8 @@
 package nr.dungeoncrawler.entities;
 
+import nr.dungeoncrawler.enums.ConsumableNames;
+import nr.dungeoncrawler.interfaces.Item;
+
 public class Monster {
     private String name;
     private int health;
@@ -7,12 +10,14 @@ public class Monster {
     private int defense;
     private int experience;
     private int gold;
+    private Item drop;
 
     public Monster(String name, int health, int damage, int experience){
         this.name = name;
         this.health = health;
         this.damage = damage;
         this.experience = experience;
+        drop = new Potion(ConsumableNames.HEALTH_POTION);
     }
 
     public String getName(){
@@ -49,6 +54,13 @@ public class Monster {
             player.setArmor(player.getArmor()-damage);
         }
         player.setHealth(player.getHealth()-damage);
+    }
+    public Item getDrop(){
+        return drop;
+    }
+
+    public void setDrop(Item drop){
+        this.drop = drop;
     }
 
 }

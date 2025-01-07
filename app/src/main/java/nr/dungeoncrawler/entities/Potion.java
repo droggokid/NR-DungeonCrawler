@@ -25,7 +25,7 @@ public class Potion implements Consumable {
         used = true;
     }
     public ConsumableNames getName(){
-        return ConsumableNames.HEALTH_POTION;
+        return name;
     }
 
 }

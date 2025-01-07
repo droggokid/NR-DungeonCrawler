@@ -2,9 +2,8 @@ package nr.dungeoncrawler.interfaces;
 
 import nr.dungeoncrawler.enums.ConsumableNames;
 
-public interface Consumable extends Item{
+public interface Item {
 
-    void use();
     ConsumableNames getName();
 
 }

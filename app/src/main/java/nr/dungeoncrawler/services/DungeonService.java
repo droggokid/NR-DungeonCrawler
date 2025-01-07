@@ -58,7 +58,7 @@ public class DungeonService {
         return currentPlayerLevel;
     }
     public Node[][] getLevel() {
-        return generateLevel(3, 2);
+        return level;
     }
     public void setLevel(Node[][] level) {
         this.level = level;

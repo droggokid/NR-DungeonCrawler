@@ -3,15 +3,20 @@
  */
 package nr.dungeoncrawler;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.checkerframework.checker.units.qual.s;
 
 import nr.dungeoncrawler.entities.Monster;
 import nr.dungeoncrawler.entities.Player;
 import nr.dungeoncrawler.entities.Potion;
 import nr.dungeoncrawler.enums.ConsumableNames;
 import nr.dungeoncrawler.interfaces.Consumable;
+import nr.dungeoncrawler.interfaces.Item;
 import nr.dungeoncrawler.interfaces.Node;
 import nr.dungeoncrawler.services.DungeonService;
+import nr.dungeoncrawler.services.ValidationService;
 
 public class App {
 
@@ -22,128 +27,95 @@ public class App {
         oneLineOfSpace();
         System.out.println("You are in a dungeon! Here is the map:");
         twoLinesOfSpace();
+        
+
         DungeonService dungeonService = new DungeonService();
         Node[][] level = dungeonService.generateLevel(5, 7);
+        dungeonService.setLevel(level);
+        System.out.println("row length:" + level[0].length);
         int currentPlayerLevel = dungeonService.getCurrentPlayerLevel();
         dungeonService.printLevel(level);
         twoLinesOfSpace();
+
         System.out.println("You can only choose the rooms from the level you are currently in.");
         System.out.println("You move a level up when clearing a room.");
         System.out.println("Code to enter a room is the number of level + the number of room.");
         System.out.println("For example, to enter the first room in the first level, you enter 01.");
         System.out.println("YOU ARE CURRENTLY AT LEVEL " + dungeonService.getCurrentPlayerLevel());
         oneLineOfSpace();
+
         System.out.println("So which room do you want to enter?");
+
         Scanner scanner = new Scanner(System.in);
+        ValidationService validationService = new ValidationService(scanner);
         String input = scanner.nextLine();
-        System.out.println("INPUT BEFORE VALIDATION: ->"+input);
-        input = validateChooseLevelInput(scanner, input, dungeonService);
-        System.out.println("INPUT AFTER VALIDATION: ->"+input);
-        System.out.printf("You chose room %s", level[currentPlayerLevel][Integer.parseInt(input.substring(1))-1].getType());
+        input = validationService.validateChooseLevelInput(input, dungeonService);
+        System.out.printf("You chose room %s",
+                level[currentPlayerLevel][Integer.parseInt(input.substring(1)) - 1].getType());
         oneLineOfSpace();
-        System.out.println("You can go the next level.");
-        currentPlayerLevel++;
-        dungeonService.setCurrentPlayerLevel(currentPlayerLevel);
-        System.out.println("YOU ARE CURRENTLY AT LEVEL " + dungeonService.getCurrentPlayerLevel());
-        twoLinesOfSpace();
-        System.out.println("Which room do you choose now?");
-        input = scanner.nextLine();
-        input = validateChooseLevelInput(scanner, input, dungeonService);
-        System.out.printf("You chose room %s", level[currentPlayerLevel][Integer.parseInt(input.substring(1))-1].getType());
         oneLineOfSpace();
-        Monster monster = new Monster("gragas",10,3,10);
-        oneLineOfSpace();
+
         System.out.println("You encounter a monster!");
         System.out.println("GRAGAS THE DRUNKEN");
         System.out.println("MONSTER ATTACKS YOU!");
+
+        Monster monster = new Monster("gragas", 10, 3, 10);
         monster.attack(player);
+
         twoLinesOfSpace();
-        System.out.println("You lose "+ monster.getDamage() +"health!");
-        System.out.println("Health after attack:" + player.getHealth());
+        System.out.println("Health before attack: " + player.getHealth());
+        System.out.println("You lose " + monster.getDamage() + " health!");
+        player.setHealth(player.getHealth() - monster.getDamage());
+        System.out.println("Health after attack: " + player.getHealth());
         twoLinesOfSpace();
         System.out.println("What do you want to do?");
         System.out.println("1. Attack");
         System.out.println("2. Open inventory");
         System.out.println("3. Block next attack");
+
         input = scanner.nextLine();
-        validateChoiceInBattleInput(scanner, input, dungeonService);
-        if(input.equals("1")){
+        input = validationService.validateChoiceInBattleInput(input, dungeonService);
+
+        if (input.equals("1")) {
             player.attack(monster);
             System.out.println("Monster health after attack:" + monster.getHealth());
             oneLineOfSpace();
-            if(monster.getHealth() <= 0){
-                System.out.println("You killed the monster!");
-            }
         }
-        /*System.out.println("Health before:" + player.getHealth());
-        System.out.println(player.getName() + "uses potion!");
-        player.getInventory().useConsumable(healtPotion);
-        System.out.println("Health after:" + player.getHealth());*/
+        if (monster.getHealth() <= 0) {
+            System.out.println("You killed the monster!");
+            System.out.println("You found a " + monster.getDrop().getName());
+            System.out.println("Add " + monster.getDrop().getName() + " to inventory?");
+            System.out.println("yes/no?");
+            input = scanner.nextLine();
+            input = validationService.validateYesNoInput(input);
+            
+            Item monsterDrop = monster.getDrop();
+            player.getInventory().add(monsterDrop);
+            System.out.println(monsterDrop.getName() + " added to inventory!");
+            System.out.println("You can go the next level.");
 
+            currentPlayerLevel++;
+            dungeonService.setCurrentPlayerLevel(currentPlayerLevel);
+
+            System.out.println("YOU ARE CURRENTLY AT LEVEL " + dungeonService.getCurrentPlayerLevel());
+            twoLinesOfSpace();
+            System.out.println("Which room do you choose now?");
+
+            input = scanner.nextLine();
+            input = validationService.validateChooseLevelInput(input, dungeonService);
+            System.out.printf("You chose room %s",
+                    level[currentPlayerLevel][Integer.parseInt(input.substring(1)) - 1].getType());
+            oneLineOfSpace();
+        
+        }
     }
-    public static void twoLinesOfSpace(){
+
+    public static void twoLinesOfSpace() {
         System.out.print("\n\n");
     }
-    public static void oneLineOfSpace(){
+
+    public static void oneLineOfSpace() {
         System.out.println();
     }
 
-    public static String validateChoiceInBattleInput(Scanner scanner, String input, DungeonService dungeonService){
-        boolean inputValid = false;
-        while(!inputValid){
-            try{
-                if(input.isEmpty()){
-                    System.out.println("Invalid input. Please enter a valid choice.");
-                    oneLineOfSpace();
-                    input = scanner.nextLine();
-                }
-                else if(Integer.parseInt(input) > 3){
-                    System.out.println("The only available choices are 1, 2, and 3.");
-                    oneLineOfSpace();
-                    input = scanner.nextLine();
-                }
-                else{
-                    inputValid = true;
-                }
-                Integer.parseInt(input);
-            }catch(NumberFormatException e){
-                System.out.println("The only available choices are 1, 2, and 3.");
-                oneLineOfSpace();
-                input = scanner.nextLine();
-            }
-        }
-        return input;
-    }
-
-    public static String validateChooseLevelInput(Scanner scanner,String input,DungeonService dungeonService){
-        boolean inputValid = false;
-        while (!inputValid) {
-            boolean wrongRoom = Integer.toString(dungeonService.getLevel()[dungeonService.getCurrentPlayerLevel()].length).charAt(0) < input.charAt(1);
-            if (input.length() != 2 || input.isEmpty() || wrongRoom) {
-                System.out.println("Invalid code. Please enter a valid room code.");
-                input = scanner.nextLine();
-            } else if (input.charAt(0) != Integer.toString(dungeonService.getCurrentPlayerLevel()).charAt(0)) {
-                System.out.println("You can only enter the rooms in your current level.");
-                oneLineOfSpace();
-                input = scanner.nextLine();
-            } else {
-                inputValid = true;
-            }
-        }
-        return input;
-    }
-
-    public static void addPotionToInventory(Player player, String input){
-        twoLinesOfSpace();
-        System.out.printf("You found a potion!\n");
-        System.out.println("Add potion to inventory?");
-        System.out.println("yes/no?");
-
-        if(input == "yes"){
-            Consumable healtPotion = new Potion(ConsumableNames.HEALTH_POTION);
-            player.getInventory().add(healtPotion);
-
-        }
-    }
 }
-
