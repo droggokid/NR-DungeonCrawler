@@ -16,9 +16,7 @@ public class BattleService {
 
     public void battle(){ // should maybe be boolean? to return if player won or not
 
-        System.out.println("You encounter a monster!");
-        System.out.println("Monster: " + enemy.getName());
-        System.out.println(enemy.getName().toUpperCase() + " ATTACKS YOU!");
+        communicationService.displayEncounterMonster(enemy);
         communicationService.displayPlayerActingFirstText();
         System.out.println();
         if(isPlayerActingFirst()){
@@ -38,7 +36,7 @@ public class BattleService {
 
     }
 
-    private void endBattle(){
+    private void endBattleWon(){
         System.out.println("You killed the monster!");
         for(Item item : enemy.getMonsterDrops()){
             System.out.println("You found a " + item.getName());
@@ -82,7 +80,7 @@ public class BattleService {
         if(input.equals("1")){
             player.attack(enemy);
             if(isEnemeyDead()){
-                endBattle();
+                endBattleWon();
             }
         }
         else if(input.equals("2")){

@@ -2,6 +2,9 @@ package nr.dungeoncrawler.services;
 
 import java.util.Scanner;
 
+import nr.dungeoncrawler.entities.Monster;
+import nr.dungeoncrawler.entities.Player;
+
 public class CommunicationService {
     private Scanner scanner;
     private String input;
@@ -33,6 +36,11 @@ public class CommunicationService {
         String input = scanner.nextLine();
         input = validationService.validateChoiceInBattleInput(input);
         return input;
+    }
+
+    public void displayEncounterMonster(Monster enemy){
+        System.out.println("You encounter a monster!");
+        System.out.println("Monster: " + enemy.getName());
     }
 
 
